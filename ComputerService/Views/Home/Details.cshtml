@@ -1,0 +1,35 @@
+﻿@model HomeDetailsViewModel
+
+@{
+    ViewBag.Title = "Item details";
+    var photoPath = "~/Images/" + (Model.Item.PhotoPath ?? "no_item.jpg");
+}
+
+    <h1 align="center">Item Details</h1>
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header">
+                <h1>@Model.Item.Name</h1>
+            </div>
+
+            <div class="card-body text-center">
+                <img class="card-img-top" src="@photoPath" asp-append-version="true" />
+
+                <h4>Item ID: @Model.Item.Id</h4>
+                <h4>Price: @Model.Item.Price$</h4>
+                <h4>Category: @Model.Item.Category</h4>
+
+            </div>
+            <div class="card-footer text-center">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back</a>
+                <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Item.Id" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/CustomScript.js"></script>
+}

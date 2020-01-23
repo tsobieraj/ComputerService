@@ -339,4 +339,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 
-*.js linguist-detectable=false
+* linguist-vendored
+*.js linguist-vendored=false

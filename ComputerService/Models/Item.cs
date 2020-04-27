@@ -18,11 +18,5 @@ namespace ComputerService.Models
         [Required]
         public Category? Category { get; set; }
         public string PhotoPath { get; set; }
-
-        //[Display(Name = "Office Email")]
-        //[RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
-        //ErrorMessage = "Invalid email format")]
-        //[Required]
-        //public string Email { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ComputerService.Models;
 using ComputerService.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace ComputerService.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IItemRepository _itemRepository;
@@ -28,11 +30,21 @@ namespace ComputerService.Controllers
             this.hostingEnvironment = hostingEnvironment;
         }
 
+        [AllowAnonymous]
         public ViewResult Index()
         {
             var model = _itemRepository.GetAllItems();
             return View(model);
         }
+
+        [AllowAnonymous]
+        public ViewResult ListCategory(string category)
+        {
+            var model = _itemRepository.GetItemsByCategory(category);
+            return View("index", model);
+        }
+
+        [AllowAnonymous]
 
         public ViewResult Details(int id)
         {
@@ -56,6 +68,14 @@ namespace ComputerService.Controllers
         public ViewResult Create()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            _itemRepository.Delete(id);
+
+            return RedirectToAction("index");
         }
 
         [HttpGet]
@@ -142,6 +162,7 @@ namespace ComputerService.Controllers
             return View(cart);
         }
 
+        [AllowAnonymous]
         public IActionResult AddToCart(int id)
         {
             var product = _itemRepository.GetItem(id);
@@ -152,7 +173,7 @@ namespace ComputerService.Controllers
             _cart.Add(product);
             cart.AddRange(_cart);
             HttpHelper.HttpContext.Session.SetObjectAsJson("Cart", cart);
-
+           
             return RedirectToAction("index");
         }
 

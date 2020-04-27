@@ -38,6 +38,13 @@ namespace ComputerService.Models
             return context.Items;
         }
 
+        //
+        public IEnumerable<Item> GetItemsByCategory(string category)
+        {
+            return context.Items.Where(Item => Item.Category.ToString() == category);
+        }
+        //
+
         public Item GetItem(int Id)
         {
             return context.Items.Find(Id);

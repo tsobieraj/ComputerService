@@ -41,6 +41,11 @@ namespace ComputerService.Models
             return _itemlist;
         }
 
+        public IEnumerable<Item> GetItemsByCategory(string category)
+        {
+            return _itemlist;
+        }
+
         public Item GetItem(int Id)
         {
             return this._itemlist.FirstOrDefault(e => e.Id == Id);

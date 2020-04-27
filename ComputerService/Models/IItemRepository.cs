@@ -9,6 +9,7 @@ namespace ComputerService.Models
     {
         Item GetItem(int Id);
         IEnumerable<Item> GetAllItems();
+        IEnumerable<Item> GetItemsByCategory(string category);
         Item Add(Item item);
         Item Update(Item itemChanges);
         Item Delete(int id);

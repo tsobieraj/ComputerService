@@ -1,0 +1,13 @@
+﻿<div style="text-align: center">
+    @if (ViewBag.ErrorTitle == null)
+    {
+        <h2>
+            An error occured while processing your request.
+        </h2>
+    }
+    else
+    {
+        <h1 class="text-danger">@ViewBag.ErrorTitle</h1>
+        <h5 class="text-danger">@ViewBag.ErrorMessage</h5>
+    }
+</div>

@@ -4,19 +4,19 @@
     ViewBag.Title = "User Login";
 }
 
-<h1 align="center">User Login</h1>
-
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6 text-white">
+        <h1 style="text-align:center"><br />Local Account Login</h1><br />
+        <hr />
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Email"></label>
+                <label asp-for="Email" style="font-size:20px"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password"></label>
+                <label asp-for="Password" style="font-size:20px"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
@@ -24,11 +24,41 @@
                 <div class="checkbox">
                     <label asp-for="RememberMe">
                         <input asp-for="RememberMe" />
-                        @Html.DisplayNameFor(e => e.RememberMe)
+                        @Html.DisplayNameFor(m => m.RememberMe)
                     </label>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <div style="text-align:center">
+                <button type="submit" class="viewButton">Login</button>
+            </div>
+            <div>
+                <a asp-action="ForgotPassword">Forgot Password?</a>
+            </div>
         </form>
+    </div>
+    <div class="col-md-6 text-white">
+        <h1 style="text-align:center"><br />External Login</h1><br />
+        <hr />
+        @{
+            if (Model.ExternalLogins.Count == 0)
+            {
+                <div>No external logins configured</div>
+            }
+            else
+            {
+                <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                    <div style="text-align:center">
+                        @foreach (var provider in Model.ExternalLogins)
+                        {
+                            <button type="submit" class="viewButton" style="width:auto"
+                                    name="provider" value="@provider.Name"
+                                    title="Log in using your @provider.DisplayName account">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            }
+        }
     </div>
 </div>

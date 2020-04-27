@@ -3,9 +3,22 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>dc6d751f-833d-4fe4-8cdd-242ce17613e7</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200307200317_test.cs" />
+    <Compile Remove="Migrations\20200307200317_test.Designer.cs" />
+    <Compile Remove="Migrations\20200316220440_AddEntryTable.cs" />
+    <Compile Remove="Migrations\20200316220440_AddEntryTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\AdministrationController.cs~RF1b075f.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>

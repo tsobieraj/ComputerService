@@ -1,0 +1,27 @@
+﻿@model AddEntryViewModel
+
+@{
+    ViewBag.Title = "Entry";
+}
+
+<h1 align="center" class="text-white"><br />Entry</h1><br />
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-controller="Account" asp-action="AddEntry" method="post">
+            <div class="form-group">
+                <label asp-for="Topic" class="text-white" style="font-size:20px"></label>
+                <input asp-for="Topic" class="form-control" />
+                <span asp-validation-for="Topic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="text-white" style="font-size:20px"></label>
+                <textarea asp-for="Description" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="col-sm-12" style="text-align:center">
+                <button type="submit" class="btn viewButton">Send</button>
+            </div>
+        </form>
+    </div>
+</div>

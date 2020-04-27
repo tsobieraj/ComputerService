@@ -1,31 +1,48 @@
-﻿@model HomeDetailsViewModel
+﻿@inject SignInManager<ApplicationUser> signInManager
+
+@model HomeDetailsViewModel
 
 @{
     ViewBag.Title = "Item details";
     var photoPath = "~/Images/" + (Model.Item.PhotoPath ?? "no_item.jpg");
 }
 
-    <h1 align="center">Item Details</h1>
+<h1 align="center" class="text-white"><br />Item Details</h1><br />
 
 <div class="row justify-content-center m-3">
     <div class="col-sm-8">
-        <div class="card">
-            <div class="card-header">
+        <div class="card text-white bg-dark border-white" style="border-radius:4%">
+            <div class="card-header text-center">
                 <h1>@Model.Item.Name</h1>
             </div>
 
             <div class="card-body text-center">
-                <img class="card-img-top" src="@photoPath" asp-append-version="true" />
-
-                <h4>Item ID: @Model.Item.Id</h4>
+                <img class="card-img-top" style="border-radius:4%" src="@photoPath" asp-append-version="true" />
+                
+                <h4><br />Item ID: @Model.Item.Id</h4>
                 <h4>Price: @Model.Item.Price$</h4>
                 <h4>Category: @Model.Item.Category</h4>
 
             </div>
             <div class="card-footer text-center">
-                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back</a>
-                <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Item.Id" class="btn btn-primary">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <a asp-controller="Home" asp-action="Index" class="btn viewButton">Back</a>
+                <a asp-controller="Home" asp-action="AddToCart" asp-route-id="@Model.Item.Id" class="btn addButton m-1">Add</a>
+                @if (signInManager.IsSignedIn(User) && !User.IsInRole("User"))
+                {
+                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Item.Id" class="btn viewButton">Edit</a>
+
+                    <span id="confirmDeleteSpan_@Model.Item.Id" style="display:none">
+                        <span><br />Are you sure you want to delete?<br /></span>
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Item.Id" class="btn deleteButton">Yes</a>
+                        <a href="#" class="btn viewButton"
+                           onclick="confirmDelete('@Model.Item.Id', false)">No</a>
+                    </span>
+
+                    <span id="deleteSpan_@Model.Item.Id">
+                        <a href="#" class="deleteButton"
+                           onclick="confirmDelete('@Model.Item.Id', true)">Delete</a>
+                    </span>
+                }
             </div>
         </div>
     </div>

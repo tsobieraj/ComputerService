@@ -2,25 +2,48 @@
 
 @{
     ViewData["Title"] = "Cart";
+    decimal price = 0;
 }
 
-<h1 align="center">Your cart:</h1>
+@foreach (var item in Model)
+{
+    price += @item.Price;
+}
 
-<div class="card-deck">
-    @foreach (var item in Model)
-    {
-        var photoPath = "~/Images/" + (item.PhotoPath ?? "no_item.jpg");
+@if (price != 0)
+{
+    <h2 class="text-white" style="text-align:center"><b>Total: @price</b><b>$</b></h2>
+    <br />
 
-        <div class="card m-2" style="min-width: 16.8rem; max-width:18.5%;">
-            <div class="card-header text-center">
-                <h3>@item.Name</h3>
+    <div class="card-deck">
+        @foreach (var item in Model)
+        {
+            var photoPath = "~/Images/" + (item.PhotoPath ?? "no_item.jpg");
+
+            <div class="card m-2 bg-dark border-white" style="min-width: 16.8rem; max-width:18.5%; border-radius:4%">
+                <div class="card-header text-center text-white" style="min-height:135px">
+                    <h3>@item.Name</h3>
+                </div>
+                <img class="card-img-top imageThumbnail" style="border-radius:5%" src="@photoPath" asp-append-version="true" />
+                <div class="card-footer text-center">
+                    <div class="align-top text-white">
+                        <h5><b>@item.Price</b><b>$</b></h5>
+                    </div>
+                    <a asp-controller="home" asp-action="details" asp-route-id="@item.Id"
+                       class="viewButton m-1" style="width:90px">View</a>
+                    <a asp-action="removefromcart" asp-controller="home" asp-route-id="@item.Id" class="deleteButton m-1">Delete</a>
+                </div>
             </div>
-            <img class="card-img-top imageThumbnail" src="@photoPath" asp-append-version="true" />
-            <div class="card-footer text-center">
-                <a asp-controller="home" asp-action="details" asp-route-id="@item.Id"
-                   class="btn btn-primary m-1">View</a>
-                <a asp-action="removefromcart" asp-controller="home" asp-route-id="@item.Id" class="btn btn-danger m-1">Delete</a>
-            </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+    <div class="col-sm-12" style="text-align:center">
+        <br /><a asp-controller="Account" asp-action="AddOrder" asp-route-totalprice="@price" class="btn addButton m-1" style="width:auto">Place Order</a>
+    </div>
+}
+else
+{
+    <br />
+    <div style="text-align: center; margin-left: auto; margin-right:auto" class="text-white">
+        <h3>Your cart is currently empty. Navigate to the <a asp-controller="Home" asp-action="Index">home page</a> to add products.</h3>
+    </div>
+}

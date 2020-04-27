@@ -1,11 +1,14 @@
-﻿@inject SignInManager<IdentityUser> signInManager
+﻿@inject SignInManager<ApplicationUser> signInManager
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <environment include="Development">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
         <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
         <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     </environment>
     <environment exclude="Development">
@@ -18,60 +21,136 @@
               asp-fallback-test-property="position"
               asp-fallback-test-value="absolute"
               asp-suppress-fallback-integrity="true">
+
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     </environment>
     <link href="~/css/site.css" rel="stylesheet" />
     <title>@ViewBag.Title</title>
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a asp-controller="home" asp-action="index" class="navbar-brand">
-                <img src="~/images/cs_logo.png" height="45" width="50" />
-            </a>
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a asp-controller="Home" asp-action="Index" class="nav-link">List</a>
-                    </li>
-                    <li class="nav-item">
-                        <a asp-controller="Home" asp-action="Create" class="nav-link">Create</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ml-auto">
-                    @if (signInManager.IsSignedIn(User))
-                    {
-                        <li class="nav-item">
-                            <form method="post" asp-action="Logout" asp-controller="Account">
-                                <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
-                                    Logout @User.Identity.Name
-                                </button>
-                            </form>
+        <nav>
+            <a id="resp-menu" class="responsive-menu" href="#"><i class="fa fa-reorder"></i> Menu</a>
+            <ul class="menu">
+
+                <li>
+                    <a class="homer" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> HOME</a>
+                </li>
+
+                <li>
+                    <a href="#"><i class="fa fa-tags"></i> CATEGORIES</a>
+                    <ul class="sub-menu">
+                        <li>
+                            <div aria-labelledby="navbarDropdownMenuLink">
+                                @foreach (string category in Enum.GetNames(typeof(Category)))
+                                {
+                                    <a class="dropdown-item" asp-controller="Home"
+                                       asp-action="ListCategory" asp-route-category="@category">@category</a>
+                                }
+                            </div>
                         </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a asp-controller="Account" asp-action="Register" class="nav-link">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-controller="Account" asp-action="Login" class="nav-link">Login</a>
-                        </li>
-                    }
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a asp-controller="home" asp-action="Cart" class="btn btn-primary">Cart</a>
+                    </ul>
+                </li>
+
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <li><a asp-controller="Account" asp-action="AddEntry"><i class="fa fa-envelope"></i> CONTACT</a></li>
+                }
+
+                @if (signInManager.IsSignedIn(User) && !User.IsInRole("User"))
+                {
+                    <li><a asp-controller="Home" asp-action="Create"><i class="fa fa-plus"></i> CREATE</a></li>
+                }
+
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a href="#"><i class="fa fa-laptop"></i> MANAGE</a>
+                        <ul class="sub-menu">
+                            <li><a asp-controller="Administration" asp-action="ListUsers"> USERS</a></li>
+                            <li><a asp-controller="Administration" asp-action="ListRoles"> ROLES</a></li>
+                        </ul>
                     </li>
-                </ul>
-            </div>
+                }
+
+                <li style="float:right">
+                    <a asp-controller="Home" asp-action="Cart">
+                        <i class="fa fa-shopping-cart" style="color:forestgreen"></i>
+                        <span> CART</span>
+                    </a>
+                </li>
+
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <li style="float:right">
+                        <form method="post" asp-action="Logout" asp-controller="Account">
+                            <button type="submit" class="nav-link btn viewButton text-white" style="width:auto; margin-top:10px">
+                                Logout @User.Identity.Name
+                            </button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li style="float:right"><a asp-controller="Account" asp-action="Login"><i class="fa fa-user"></i> LOGIN</a></li>
+                    <li style="float:right"><a asp-controller="Account" asp-action="Register"><i class="fa fa-user-plus"></i> REGISTER</a></li>
+                }
+
+            </ul>
         </nav>
         <div>
+            <br />
             @RenderBody()
         </div>
         @RenderSection("Scripts", required: false)
     </div>
 </body>
 </html>
+<footer class="mainfooter" role="contentinfo">
+    <div class="footer-middle">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="footer-pad">
+                        <h4>Site links</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Newsletter</a></li>
+                            <li><a href="#">FAQs</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="footer-pad">
+                        <h4>Contact us</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="#" title="Mail"><i class="fa fa-envelope fa-1.5x"></i></a><font size="4"> t.sobieraj97@gmail.com</font></li>
+                            <li><a href="#"><br /> </a></li>
+                            <li><a href="#" title="Phone"><i class="fa fa-phone fa-1.5x"></i></a><font size="4"> 34 121 00 00</font></li>
+                            <li><a href="#">Monday - Friday - 9:00 - 17:00</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <h4>Follow Us</h4>
+                    <ul class="social-network social-circle">
+                        <li><a href="#" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#" class="icoInstagram" title="Instagram"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#" class="icoYouTube" title="YouTube"><i class="fa fa-youtube"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 copy">
+                    <p class="text-center">&copy; ComputerService 2020</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
